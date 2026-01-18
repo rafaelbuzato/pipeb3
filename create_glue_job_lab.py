@@ -8,11 +8,11 @@ print("\n" + "="*60)
 print("CRIANDO GLUE JOB - B3 PIPELINE (LAB VERSION)")
 print("="*60 + "\n")
 
-# Ler configurações
+# Ler configuracoes
 env_file = Path('.env')
 config = {}
 if env_file.exists():
-    for line in env_file.read_text().splitlines():
+    for line in env_file.read_text(encoding='utf-8').splitlines():
         if '=' in line:
             key, value = line.split('=', 1)
             config[key.strip()] = value.strip()
@@ -42,10 +42,10 @@ if lab_roles:
     # Usar a primeira role do lab encontrada
     ROLE_NAME = lab_roles[0]['RoleName']
     ROLE_ARN = lab_roles[0]['Arn']
-    print(f"  ✓ Usando role: {ROLE_NAME}")
+    print(f"  OK Usando role: {ROLE_NAME}")
 else:
-    print("  ✗ Nenhuma role do lab encontrada")
-    print("\n  Roles disponíveis:")
+    print("  X Nenhuma role do lab encontrada")
+    print("\n  Roles disponiveis:")
     for role in response['Roles'][:10]:
         print(f"    - {role['RoleName']}")
     print("\n  Digite o nome da role a usar:")
@@ -53,7 +53,7 @@ else:
     
     role_info = iam.get_role(RoleName=ROLE_NAME)
     ROLE_ARN = role_info['Role']['Arn']
-    print(f"  ✓ Usando role: {ROLE_NAME}")
+    print(f"  OK Usando role: {ROLE_NAME}")
 
 # ============================================================================
 # PASSO 2: Criar Database
@@ -65,7 +65,7 @@ DATABASE_NAME = "b3_database"
 
 try:
     glue.get_database(Name=DATABASE_NAME)
-    print("  ✓ Database já existe")
+    print("  OK Database ja existe")
 except:
     try:
         glue.create_database(
@@ -74,10 +74,10 @@ except:
                 'Description': 'Database for B3 stock market data'
             }
         )
-        print("  ✓ Database criada")
+        print("  OK Database criada")
     except Exception as e:
-        print(f"  ⚠ Erro ao criar database: {e}")
-        print("  (Você pode criar manualmente na console)")
+        print(f"  Aviso: Erro ao criar database: {e}")
+        print("  (Voce pode criar manualmente na console)")
 
 # ============================================================================
 # PASSO 3: Upload Script
@@ -93,12 +93,12 @@ if script_file.exists():
             BUCKET,
             'scripts/glue_etl_job.py'
         )
-        print("  ✓ Script enviado")
+        print("  OK Script enviado")
     except Exception as e:
-        print(f"  ✗ Erro no upload: {e}")
+        print(f"  X Erro no upload: {e}")
         exit(1)
 else:
-    print("  ✗ Arquivo glue/glue_etl_job.py não encontrado")
+    print("  X Arquivo glue/glue_etl_job.py nao encontrado")
     exit(1)
 
 # ============================================================================
@@ -142,9 +142,9 @@ try:
         Timeout=30,
         MaxRetries=0
     )
-    print("  ✓ Glue Job criado")
+    print("  OK Glue Job criado")
 except Exception as e:
-    print(f"  ✗ Erro ao criar job: {e}")
+    print(f"  X Erro ao criar job: {e}")
     exit(1)
 
 # ============================================================================
@@ -154,12 +154,12 @@ except Exception as e:
 print("\n" + "="*60)
 print("RESUMO")
 print("="*60)
-print(f"✓ Role usada: {ROLE_NAME}")
-print(f"✓ Database: {DATABASE_NAME}")
-print(f"✓ Script S3: s3://{BUCKET}/scripts/glue_etl_job.py")
-print(f"✓ Glue Job: {JOB_NAME}")
+print(f"OK Role usada: {ROLE_NAME}")
+print(f"OK Database: {DATABASE_NAME}")
+print(f"OK Script S3: s3://{BUCKET}/scripts/glue_etl_job.py")
+print(f"OK Glue Job: {JOB_NAME}")
 print("\nPara testar:")
 print(f"  aws glue start-job-run --job-name {JOB_NAME}")
 print("\nConsole:")
-print("  AWS Glue → ETL jobs → b3-etl-job")
+print("  AWS Glue -> ETL jobs -> b3-etl-job")
 print("="*60 + "\n")
