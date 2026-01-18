@@ -7,7 +7,7 @@ import yfinance as yf
 
 s3 = boto3.client('s3')
 BUCKET = 'pipeline-b3-lab-buzato'
-TICKERS = ['^BVSP', 'PETR4.SA', 'VALE3.SA']
+TICKERS = ['^BVSP', 'PETR4.SA', 'VALE3.SA', 'ITUB4.SA', 'ITSA4.SA']
 
 print("="*60)
 print("SIMULAÇÃO: Lambda de Ingestão B3")
