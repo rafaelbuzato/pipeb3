@@ -1,3 +1,4 @@
+# lambda/lambda_function.py
 import json
 import boto3
 import os
@@ -25,14 +26,14 @@ def lambda_handler(event, context):
         glue_job_name = os.environ.get('GLUE_JOB_NAME', 'b3-etl-job')
         
         print(f"Starting Glue Job: {glue_job_name}")
-        print(f"Date partition: {date_partition}")
+        print(f"Parameters: bucket={bucket}, date={date_partition}")
         
-        # Start Glue job
+        # Start Glue job - CORREÇÃO: argumentos sem -- extra
         response = glue_client.start_job_run(
             JobName=glue_job_name,
             Arguments={
-                '--bucket': bucket,
-                '--date': date_partition
+                '--bucket': bucket,      # Com -- (AWS exige)
+                '--date': date_partition  # Com -- (AWS exige)
             }
         )
         
@@ -55,6 +56,9 @@ def lambda_handler(event, context):
     except Exception as e:
         error_msg = f"ERROR: {str(e)}"
         print(error_msg)
+        
+        import traceback
+        print(traceback.format_exc())
         
         return {
             'statusCode': 500,

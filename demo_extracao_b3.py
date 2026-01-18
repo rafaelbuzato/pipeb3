@@ -14,18 +14,21 @@ import argparse
 s3 = boto3.client('s3')
 
 # Configurações
-BUCKET = 'pipeline-b3-lab-buzato'
+BUCKET = 'pipeline-b3-lab-rafabuzato'
 TICKERS = [
     ('^BVSP', 'IBOV', 'Índice Bovespa'),
     ('PETR4.SA', 'PETR4', 'Petrobras PN'),
     ('VALE3.SA', 'VALE3', 'Vale ON'),
     ('ITUB4.SA', 'ITUB4', 'Itaú Unibanco PN'),
+    ('ABEV3.SA', 'ABEV3', 'Ambev ON'),
+    ('BBAS3.SA', 'BBAS3', 'Banco do Brasil ON'),
     ('ITSA4.SA', 'ITSA4', 'Itaúsa PN')
 ]
 
 # OPÇÕES DE PERÍODO
 PERIOD_OPTIONS = {
     '5d': '5 dias',
+    '10d': '10 dias',
     '1mo': '1 mês (~21 dias úteis)',
     '3mo': '3 meses (~63 dias úteis)',
     '6mo': '6 meses (~126 dias úteis)',
@@ -188,9 +191,9 @@ def main(period='1mo', custom_start=None, custom_end=None, tickers_filter=None):
                 engine='pyarrow',
                 index=False,
                 compression='snappy',
-                coerce_timestamps='ms',
+                coerce_timestamps='us',
                 allow_truncated_timestamps=True,
-                use_deprecated_int96_timestamps=False
+                use_deprecated_int96_timestamps=True
             )
             
             buffer.seek(0)
@@ -223,8 +226,9 @@ def main(period='1mo', custom_start=None, custom_end=None, tickers_filter=None):
                     engine='pyarrow',
                     index=False,
                     compression='snappy',
-                    coerce_timestamps='ms',
-                    allow_truncated_timestamps=True
+                    coerce_timestamps='us',
+                    allow_truncated_timestamps=True,
+                    use_deprecated_int96_timestamps=True
                 )
                 date_buffer.seek(0)
                 
