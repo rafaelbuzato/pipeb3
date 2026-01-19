@@ -22,6 +22,7 @@ TICKERS = [
     ('ITUB4.SA', 'ITUB4', 'Itaú Unibanco PN'),
     ('ABEV3.SA', 'ABEV3', 'Ambev ON'),
     ('BBAS3.SA', 'BBAS3', 'Banco do Brasil ON'),
+    ('PETR3.SA', 'PETR3', 'Petrobras ON'),
     ('ITSA4.SA', 'ITSA4', 'Itaúsa PN')
 ]
 
